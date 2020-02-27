@@ -1,1 +1,1 @@
-web: ./service-api
+web: bin/currency-api

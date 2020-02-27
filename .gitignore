@@ -1,5 +1,6 @@
 # infra
 secrets.yml
+bin/
 
 # IDE
 .idea/

@@ -1,8 +1,6 @@
 build:
     languages:
       - go
+
 build:
-    docker:
-        service-api: service-api/Dockerfile
-        service-chatbot: service-chatbot/Dockerfile
-        service-logic: service-logic/Dockerfile
+    web: currency-api
