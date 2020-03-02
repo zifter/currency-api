@@ -4,6 +4,7 @@ bin/
 
 # IDE
 .idea/
+.vscode/
 
 # Binaries for programs and plugins
 __debug_bin

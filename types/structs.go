@@ -23,9 +23,17 @@ type AggregatedData struct {
 }
 
 type FullCurrencyInfo struct {
-	CurrencyAggregation map[string]AggregatedData
+	CurrencyAggregation map[string]*AggregatedData
 }
 
 func NewFullCurrencyInfo() *FullCurrencyInfo {
-	return &FullCurrencyInfo{map[string]AggregatedData{}}
+	return &FullCurrencyInfo{map[string]*AggregatedData{}}
+}
+
+func (data *AggregatedData) SetNBInfo(info *NBInfo) {
+	data.NationalBank = *info
+}
+
+func (data *AggregatedData) SetBankBest(info *BestInfo) {
+	data.BankBest = *info
 }

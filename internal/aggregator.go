@@ -1,52 +1,88 @@
 package internal
 
-import "github.com/zifter/currency-api/types"
+import (
+	"fmt"
+	"sync"
 
-func Aggregate() (data *types.FullCurrencyInfo) {
-	data = types.NewFullCurrencyInfo()
+	"github.com/sirupsen/logrus"
+	"github.com/zifter/currency-api/internal/infobank"
+	"github.com/zifter/currency-api/internal/national_bank"
+	"github.com/zifter/currency-api/types"
+)
 
-	var usd types.AggregatedData
-	usd.NationalBank = *RequestNBUSD()
-	data.CurrencyAggregation["usd"] = usd
+var log = logrus.New().WithFields(logrus.Fields{
+	"name": "currency-api",
+})
 
-	//infoBankData := RequestInfoBankData()
-	//if len(infoBankData) == 0 {
-	//	log.Fatal("Can't aggregate")
-	//	return
-	//}
-	//
-	//sort.Slice(infoBankData[:], func (l, r int) bool {
-	//	return infoBankData[l].USDBuy > infoBankData[r].USDBuy
-	//})
-	//data.USD.Buy.BankName = infoBankData[0].BankName
-	//data.USD.Buy.Value = infoBankData[0].USDBuy
-	//
-	//sort.Slice(infoBankData[:], func (l, r int) bool {
-	//	return infoBankData[l].USDSell < infoBankData[r].USDSell
-	//})
-	//var i int = 0
-	//for {
-	//	if  infoBankData[i].USDSell > 0 {
-	//		data.USD.Sell.BankName = infoBankData[i].BankName
-	//		data.USD.Sell.Value = infoBankData[i].USDSell
-	//		break
-	//	} else {
-	//		i++
-	//	}
-	//}
+func Aggregate() *types.FullCurrencyInfo {
+	data := types.NewFullCurrencyInfo()
 
-	//data.USD.Sell.BankName = firstEl.BankName
-	//data.EUR.Buy.BankName = firstEl.BankName
-	//data.EUR.Sell.BankName = firstEl.BankName
-	//data.RUB.Buy.BankName = firstEl.BankName
-	//data.RUB.Sell.BankName = firstEl.BankName
-	//
-	//
-	//data.USD.Sell.Value = firstEl.USDSell
-	//data.EUR.Buy.Value = firstEl.EURBuy
-	//data.EUR.Sell.Value = firstEl.EURSell
-	//data.RUB.Buy.Value = firstEl.RUBBuy
-	//data.RUB.Sell.Value = firstEl.RUBSell
+	wg := sync.WaitGroup{}
+	wg.Add(len(currencies))
+	for i := range currencies {
+		data.CurrencyAggregation[currencies[i].humanReadable] = &types.AggregatedData{}
 
-	return
+		go func(cur *currencyTechDescr) {
+			defer wg.Done()
+
+			nb, err := request(cur)
+			if err != nil {
+				log.Errorf("Failed while requsting %v: %v", cur, err)
+			} else {
+				data.CurrencyAggregation[cur.humanReadable].SetNBInfo(nb)
+			}
+		}(&currencies[i])
+	}
+
+	wg.Add(1)
+
+	infoBank := []infobank.InfoBankData{}
+	go func() {
+		defer wg.Done()
+		var err error
+		infoBank, err = infobank.RequestInfoBankData()
+		if err != nil {
+			log.Errorf("Failed to read infobank %v", err)
+		}
+	}()
+
+	wg.Wait()
+
+	if len(infoBank) > 1 {
+		for _, name := range infobank.SupportedCurrency {
+			sellMin := 0
+			buyMax := 0
+			for i := range infoBank {
+				if infoBank[i].Rates[name].Sell > infoBank[sellMin].Rates[name].Sell {
+					sellMin = i
+				}
+
+				if infoBank[i].Rates[name].Buy > infoBank[buyMax].Rates[name].Buy {
+					buyMax = i
+				}
+			}
+
+			data.CurrencyAggregation[name].SetBankBest(&types.BestInfo{
+				Sell: types.Rate{
+					BankName: infoBank[sellMin].BankName,
+					Value:    infoBank[sellMin].Rates[name].Sell,
+				},
+				Buy: types.Rate{
+					BankName: infoBank[buyMax].BankName,
+					Value:    infoBank[buyMax].Rates[name].Buy,
+				},
+			})
+		}
+	}
+
+	return data
+}
+
+func request(descr *currencyTechDescr) (*types.NBInfo, error) {
+	info, err := national_bank.RequestInfo(descr.nationalBankID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get national bank: %w", err)
+	}
+
+	return info, nil
 }
