@@ -1,4 +1,4 @@
-package internal
+package byn
 
 type currencyTechDescr struct {
 	humanReadable  string

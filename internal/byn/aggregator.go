@@ -1,12 +1,12 @@
-package internal
+package byn
 
 import (
 	"fmt"
 	"sync"
 
 	"github.com/sirupsen/logrus"
-	"github.com/zifter/currency-api/internal/infobank"
-	"github.com/zifter/currency-api/internal/national_bank"
+	"github.com/zifter/currency-api/internal/byn/infobank"
+	"github.com/zifter/currency-api/internal/byn/national_bank"
 	"github.com/zifter/currency-api/types"
 )
 
@@ -14,7 +14,7 @@ var log = logrus.New().WithFields(logrus.Fields{
 	"name": "currency-api",
 })
 
-func Aggregate() *types.FullCurrencyInfo {
+func Aggregate() (*types.FullCurrencyInfo, error) {
 	data := types.NewFullCurrencyInfo()
 
 	wg := sync.WaitGroup{}
@@ -75,7 +75,7 @@ func Aggregate() *types.FullCurrencyInfo {
 		}
 	}
 
-	return data
+	return data, nil
 }
 
 func request(descr *currencyTechDescr) (*types.NBInfo, error) {
