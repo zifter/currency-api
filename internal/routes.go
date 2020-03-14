@@ -25,7 +25,7 @@ func getBYNCurrency(w http.ResponseWriter, req *http.Request) {
 	log.Infof("Get %v", req.URL.Path)
 
 	fullInfo, err := byn.Aggregate()
-	if err == nil {
+	if err != nil {
 		log.Errorf("cant aggregate: %v", err)
 	}
 	b, err := json.Marshal(fullInfo)
@@ -40,7 +40,7 @@ func getRUBCurrency(w http.ResponseWriter, req *http.Request) {
 	log.Infof("Get %v", req.URL.Path)
 
 	fullInfo, err := rub.Aggregate()
-	if err == nil {
+	if err != nil {
 		log.Errorf("cant aggregate: %v", err)
 	}
 
