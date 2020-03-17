@@ -15,6 +15,6 @@ func main() {
 	log.Println("Start http on: ", config.API.Port)
 	err := http.ListenAndServe(":"+config.API.Port, nil)
 	if err != nil {
-		panic("Something went wrong!")
+		log.Fatalf("Something went wrong: %v", err)
 	}
 }

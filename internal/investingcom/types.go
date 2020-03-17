@@ -1,8 +1,8 @@
-package types
+package investingcom
 
 import "time"
 
-type OilResponse struct {
+type ScratchResponse struct {
 	Value       float64   `json:"value"`
 	Diff        float64   `json:"diff"`
 	DiffPercent float64   `json:"diff_percent"`
