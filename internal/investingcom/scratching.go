@@ -27,6 +27,11 @@ var available = map[string]privateData{
 		diff:        "span.arial_20.pid-945629-pc",
 		diffPercent: "span.arial_20.pid-945629-pcp",
 	},
+	"ethereum-usd": privateData{
+		url:         "https://ru.investing.com/crypto/ethereum",
+		diff:        "span.arial_20.pid-1061443-pc",
+		diffPercent: "span.arial_20.pid-1061443-pcp",
+	},
 }
 
 func strToFloat64(text string) float64 {

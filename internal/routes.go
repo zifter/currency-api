@@ -7,8 +7,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"github.com/zifter/currency-api/internal/byn"
-	"github.com/zifter/currency-api/internal/rub"
 	"github.com/zifter/currency-api/internal/investingcom"
+	"github.com/zifter/currency-api/internal/rub"
 )
 
 func init() {
@@ -20,6 +20,7 @@ func init() {
 
 	http.HandleFunc("/oil/", getOil)
 	http.HandleFunc("/bitcoin/", getBitcoin)
+	http.HandleFunc("/ethereum/", getEthereum)
 }
 
 func getBYNCurrency(w http.ResponseWriter, req *http.Request) {
@@ -75,4 +76,8 @@ func getOil(w http.ResponseWriter, req *http.Request) {
 
 func getBitcoin(w http.ResponseWriter, req *http.Request) {
 	getDataTypeResponse("bitcoin-usd", w, req)
+}
+
+func getEthereum(w http.ResponseWriter, req *http.Request) {
+	getDataTypeResponse("ethereum-usd", w, req)
 }
