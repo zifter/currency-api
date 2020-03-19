@@ -21,6 +21,7 @@ func init() {
 	http.HandleFunc("/oil/", getOil)
 	http.HandleFunc("/bitcoin/", getBitcoin)
 	http.HandleFunc("/ethereum/", getEthereum)
+	http.HandleFunc("/tesla/", getTesla)
 }
 
 func getBYNCurrency(w http.ResponseWriter, req *http.Request) {
@@ -80,4 +81,8 @@ func getBitcoin(w http.ResponseWriter, req *http.Request) {
 
 func getEthereum(w http.ResponseWriter, req *http.Request) {
 	getDataTypeResponse("ethereum-usd", w, req)
+}
+
+func getTesla(w http.ResponseWriter, req *http.Request) {
+	getDataTypeResponse("tesla-usd", w, req)
 }

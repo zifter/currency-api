@@ -32,6 +32,11 @@ var available = map[string]privateData{
 		diff:        "span.arial_20.pid-1061443-pc",
 		diffPercent: "span.arial_20.pid-1061443-pcp",
 	},
+	"tesla-usd": privateData{
+		url:         "https://ru.investing.com/equities/tesla-motors",
+		diff:        "span.arial_20.pid-13994-pc",
+		diffPercent: "span.arial_20.pid-13994-pcp",
+	},
 }
 
 func strToFloat64(text string) float64 {
