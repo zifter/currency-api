@@ -2,6 +2,7 @@ package byn
 
 import (
 	"fmt"
+	"math"
 	"sync"
 
 	"github.com/sirupsen/logrus"
@@ -13,6 +14,10 @@ import (
 var log = logrus.New().WithFields(logrus.Fields{
 	"name": "currency-api",
 })
+
+func isNearZero(v float32) bool {
+	return math.Abs(float64(v)) < 0.001
+}
 
 func Aggregate() (*types.FullCurrencyInfo, error) {
 	data := types.NewFullCurrencyInfo()
@@ -53,7 +58,7 @@ func Aggregate() (*types.FullCurrencyInfo, error) {
 			sellMin := 0
 			buyMax := 0
 			for i := range infoBank {
-				if infoBank[i].Rates[name].Sell > infoBank[sellMin].Rates[name].Sell {
+				if !isNearZero(infoBank[i].Rates[name].Sell) && infoBank[i].Rates[name].Sell < infoBank[sellMin].Rates[name].Sell {
 					sellMin = i
 				}
 
