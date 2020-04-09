@@ -39,12 +39,19 @@ var available = map[string]privateData{
 	},
 }
 
-func strToFloat64(text string) float64 {
+func strToFloat64(text string) (float64, error) {
+	fmt.Println(text)
+
 	text = strings.Replace(text, ".", "", -1)
+
+	if !strings.Contains(text, ",") {
+		return 0., fmt.Errorf("something wrong with text %v", text)
+	}
 	text = strings.Replace(text, ",", ".", -1)
+
 	text = strings.Replace(text, "%", "", -1)
 	v, _ := strconv.ParseFloat(text, 64)
-	return v
+	return v, nil
 }
 
 func Aggregate(dataType string) (*ScratchResponse, error) {
@@ -69,10 +76,26 @@ func Aggregate(dataType string) (*ScratchResponse, error) {
 		return nil, fmt.Errorf("cant get page from external site %v", err)
 	}
 
-	return &ScratchResponse{
-		Value:       strToFloat64(data.Find("#last_last").Text()),
-		Diff:        strToFloat64(data.Find(investingData.diff).Text()),
-		DiffPercent: strToFloat64(data.Find(investingData.diffPercent).Text()),
-		Timestamp:   time.Now(),
-	}, nil
+	resp := &ScratchResponse{
+		Timestamp: time.Now(),
+	}
+	if v, err := strToFloat64(data.Find("#last_last").Text()); err != nil {
+		return nil, err
+	} else {
+		resp.Value = v
+	}
+
+	if v, err := strToFloat64(data.Find(investingData.diff).Text()); err != nil {
+		return nil, err
+	} else {
+		resp.Diff = v
+	}
+
+	if v, err := strToFloat64(data.Find(investingData.diffPercent).Text()); err != nil {
+		return nil, err
+	} else {
+		resp.DiffPercent = v
+	}
+
+	return resp, nil
 }

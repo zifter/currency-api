@@ -56,7 +56,7 @@ func Test_strToFloat64(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := strToFloat64(tt.args.text); got != tt.want {
+			if got, _ := strToFloat64(tt.args.text); got != tt.want {
 				t.Errorf("strToFloat64() = %v, want %v", got, tt.want)
 			}
 		})
