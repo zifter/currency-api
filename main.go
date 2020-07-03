@@ -12,7 +12,7 @@ func main() {
 
 	config := internal.LoadConfig()
 
-	log.Println("Start http on: ", config.API.Port)
+	log.Printf("Start http on: localhost:%v", config.API.Port)
 	err := http.ListenAndServe(":"+config.API.Port, nil)
 	if err != nil {
 		log.Fatalf("Something went wrong: %v", err)

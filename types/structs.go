@@ -3,7 +3,10 @@ package types
 import (
 	"encoding/json"
 	"errors"
+	"math"
 )
+
+const float64EqualityThreshold = 1e-9
 
 type Rate struct {
 	BankName string
@@ -42,6 +45,13 @@ func (data *AggregatedData) SetNBInfo(info *NBInfo) {
 
 func (data *AggregatedData) SetBankBest(info *BestInfo) {
 	data.BankBest = *info
+}
+
+func (data *AggregatedData) IsValid() bool {
+	return math.Abs(data.NationalBank.OfficialRate) > float64EqualityThreshold &&
+		math.Abs(data.BankBest.Sell.Value) > float64EqualityThreshold &&
+		math.Abs(data.BankBest.Buy.Value) > float64EqualityThreshold &&
+		math.Abs(data.BankBest.Buy.Value) > float64EqualityThreshold
 }
 
 func (info *FullCurrencyInfo) Scan(value interface{}) error {

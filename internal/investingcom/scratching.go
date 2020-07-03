@@ -3,8 +3,6 @@ package investingcom
 import (
 	"fmt"
 	"net/http"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
@@ -17,45 +15,32 @@ type privateData struct {
 }
 
 var available = map[string]privateData{
-	"brent-oil": privateData{
+	"brent-oil": {
 		url:         "https://ru.investing.com/commodities/brent-oil",
 		diff:        "span.arial_20.pid-8833-pc",
 		diffPercent: "span.arial_20.pid-8833-pcp",
 	},
-	"bitcoin-usd": privateData{
+	"bitcoin-usd": {
 		url:         "https://ru.investing.com/crypto/bitcoin/btc-usd",
 		diff:        "span.arial_20.pid-945629-pc",
 		diffPercent: "span.arial_20.pid-945629-pcp",
 	},
-	"ethereum-usd": privateData{
+	"ethereum-usd": {
 		url:         "https://ru.investing.com/crypto/ethereum",
 		diff:        "span.arial_20.pid-1061443-pc",
 		diffPercent: "span.arial_20.pid-1061443-pcp",
 	},
-	"tesla-usd": privateData{
+	"tesla-usd": {
 		url:         "https://ru.investing.com/equities/tesla-motors",
 		diff:        "span.arial_20.pid-13994-pc",
 		diffPercent: "span.arial_20.pid-13994-pcp",
 	},
 }
 
-func strToFloat64(text string) (float64, error) {
-	fmt.Println(text)
-
-	text = strings.Replace(text, ".", "", -1)
-
-	if !strings.Contains(text, ",") {
-		return 0., fmt.Errorf("something wrong with text %v", text)
-	}
-	text = strings.Replace(text, ",", ".", -1)
-
-	text = strings.Replace(text, "%", "", -1)
-	v, _ := strconv.ParseFloat(text, 64)
-	return v, nil
-}
-
 func Aggregate(dataType string) (*ScratchResponse, error) {
 	investingData := available[dataType]
+
+	fmt.Println(investingData.url)
 	req, err := http.NewRequest("GET", investingData.url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("cant create request: %w", err)
