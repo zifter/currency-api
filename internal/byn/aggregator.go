@@ -15,8 +15,8 @@ var log = logrus.New().WithFields(logrus.Fields{
 	"name": "currency-api",
 })
 
-func isNearZero(v float32) bool {
-	return math.Abs(float64(v)) < 0.001
+func isNearZero(v float64) bool {
+	return math.Abs(v) < 0.001
 }
 
 func Aggregate() (*types.FullCurrencyInfo, error) {

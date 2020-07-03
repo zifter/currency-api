@@ -7,7 +7,7 @@ import (
 
 type Rate struct {
 	BankName string
-	Value    float32
+	Value    float64
 }
 
 type BestInfo struct {
@@ -19,7 +19,7 @@ type NBInfo struct {
 	ID           int     `json:"Cur_ID"`
 	Abbreviation string  `json:"Cur_Abbreviation"`
 	Name         string  `json:"Cur_Name"`
-	OfficialRate float32 `json:"Cur_OfficialRate"`
+	OfficialRate float64 `json:"Cur_OfficialRate"`
 }
 
 type AggregatedData struct {

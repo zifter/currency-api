@@ -15,8 +15,8 @@ var (
 )
 
 type Rate struct {
-	Buy  float32
-	Sell float32
+	Buy  float64
+	Sell float64
 }
 
 type InfoBankData struct {
@@ -33,12 +33,12 @@ type rawInfoBankData struct {
 	ID         int     `json:"FID"`
 	BankID     int     `json:"FBANKID"`
 	BankName   string  `json:"FBANKNAME"`
-	USDBuy     float32 `json:"FRATEBUYNAL1"`
-	USDSell    float32 `json:"FRATESELLNAL1"`
-	EURBuy     float32 `json:"FRATEBUYNAL2"`
-	EURSell    float32 `json:"FRATESELLNAL2"`
-	RUBBuy     float32 `json:"FRATEBUYNAL3"`
-	RUBSell    float32 `json:"FRATESELLNAL3"`
+	USDBuy     float64 `json:"FRATEBUYNAL1"`
+	USDSell    float64 `json:"FRATESELLNAL1"`
+	EURBuy     float64 `json:"FRATEBUYNAL2"`
+	EURSell    float64 `json:"FRATESELLNAL2"`
+	RUBBuy     float64 `json:"FRATEBUYNAL3"`
+	RUBSell    float64 `json:"FRATESELLNAL3"`
 	UpdateDate string  `json:"FLASTD"`
 	UpdateTime string  `json:"FLASTT"`
 }
@@ -58,9 +58,9 @@ func RequestInfoBankData() ([]InfoBankData, error) {
 			UpdateDate: raw[i].UpdateDate,
 			UpdateTime: raw[i].UpdateTime,
 			Rates: map[string]Rate{
-				"USD": Rate{raw[i].USDBuy, raw[i].USDSell},
-				"EUR": Rate{raw[i].EURBuy, raw[i].EURSell},
-				"RUB": Rate{raw[i].RUBBuy, raw[i].RUBSell},
+				"USD": {raw[i].USDBuy, raw[i].USDSell},
+				"EUR": {raw[i].EURBuy, raw[i].EURSell},
+				"RUB": {raw[i].RUBBuy, raw[i].RUBSell},
 			},
 		}
 	}

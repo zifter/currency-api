@@ -14,8 +14,8 @@ type cbrCurrencyInfo struct {
 	CharCode string  `json:"CharCode"`
 	Nominal  int     `json:"Nominal"`
 	Name     string  `json:"Name"`
-	Value    float32 `json:"Value"`
-	Previous float32 `json:"Previous"`
+	Value    float64 `json:"Value"`
+	Previous float64 `json:"Previous"`
 }
 
 type cbrResponse struct {
