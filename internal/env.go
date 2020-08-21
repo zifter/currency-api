@@ -6,7 +6,7 @@ import (
 
 type Config struct {
 	API struct {
-		Port string `yaml:"port" env:"PORT" env-default:"8080"`
+		Port string `yaml:"port" env:"PORT" env-default:"8082"`
 	} `yaml:"logic"`
 }
 
